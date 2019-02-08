@@ -1,0 +1,11 @@
+{
+  "name": "shorten-url-backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/wyushi/shorten-url.git",
+  "author": "Yushi Wang <jasper.ys.wang@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
