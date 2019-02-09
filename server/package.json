@@ -5,7 +5,12 @@
   "repository": "https://github.com/wyushi/shorten-url.git",
   "author": "Yushi Wang <jasper.ys.wang@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "start": "nodemon ./src/index.js 8000"
+  },
   "dependencies": {
-    "express": "^4.16.4"
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "nodemon": "^1.18.10"
   }
 }
