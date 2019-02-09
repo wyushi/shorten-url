@@ -1,17 +1,10 @@
 const express = require('express')
 const bodyParser = require('body-parser')
-const Sequelize = require('sequelize')
-
+const sequelize = require('./db')
 const port = process.argv[2] || 8080
-const dbUrl = 'postgres://postgres:mypassword@postgres:5432/postgres'
 
 const app = express()
 app.use(bodyParser.json({ type: 'application/json' }))
-
-const sequelize = new Sequelize(dbUrl)
-sequelize.authenticate()
-  .then(_ => console.log('Connection has been established successfully.'))
-  .catch(err => console.error('Unable to connect to the database:', err))
 
 app.get('/urls/:hash', (req, res) => {
   res.send({
