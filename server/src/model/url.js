@@ -2,8 +2,6 @@ const Sequelize = require('sequelize')
 const sequelize = require('../db')
 const shorten = require('../utils/shorten')
 
-const domain = 'http://shorten.io'
-
 const schema = {
   id: {
     type: Sequelize.INTEGER,
@@ -69,7 +67,7 @@ const newShort = (original) => {
 function purge(url) {
   return {
     id: url.id,
-    shortened: `${domain}/${url.shortened}`,
+    shortened: url.shortened,
     original: url.original
   }
 }

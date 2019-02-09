@@ -10,6 +10,7 @@ module.exports = function attach(app) {
         if (url === null) {
           res.status(404).send({ message: 'URL not found' })
         } else {
+          url.shortened = `http://${req.headers.host}/${url.shortened}`
           res.send(url)
         }
       })
@@ -18,7 +19,10 @@ module.exports = function attach(app) {
   app.post('/urls', (req, res) => {
     const url = req.body.shortenURL
     if (validURL(url)) {
-      URL.newURL(url).then(url => res.send(url))
+      URL.newURL(url).then(url => {
+        url.shortened = `http://${req.headers.host}/${url.shortened}`
+        res.send(url)
+      })
     } else {
       res.status(400).send({ message: 'invalid URL' })
     }
