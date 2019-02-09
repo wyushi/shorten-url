@@ -1,7 +1,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const attachAPI = require('./api/url')
-const port = process.argv[2] || 8080
+const port = process.env.PORT || 80
 
 const app = express()
 app.use(bodyParser.json({ type: 'application/json' }))

@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize')
-const dbUrl = 'postgres://postgres:mypassword@postgres:5432/postgres'
+const dbUrl = process.env.DB_CONN_URL
 
 const sequelize = new Sequelize(dbUrl)
 

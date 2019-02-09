@@ -4,6 +4,9 @@ services:
     build: .
     depends_on:
       - postgres
+    environment:
+      DB_CONN_URL: postgres://postgres:mypassword@postgres:5432/postgres
+      PORT: 8080
     ports:
       - "8080:8080"
     volumes:
