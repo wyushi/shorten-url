@@ -1,25 +1,42 @@
 const express = require('express')
 const bodyParser = require('body-parser')
-const sequelize = require('./db')
+const URL = require('./model/url')
 const port = process.argv[2] || 8080
 
 const app = express()
 app.use(bodyParser.json({ type: 'application/json' }))
 
 app.get('/urls/:hash', (req, res) => {
-  res.send({
-    "id": 123,
-    "shortened_url": `http://shorten.io/${req.param.hash}`,
-    "original_url": "http://somewebsite.com"
-  })
+  const shortened = req.params.hash
+  URL.findByShortURL(shortened)
+    .then(url => {
+      if (url === null) {
+        res.status(404).send({ message: 'URL not found' })
+      } else {
+        res.send(url)
+      }
+    })
 })
 
 app.post('/urls', (req, res) => {
-  res.send(req.body)
+  const url = req.body.shortenURL
+  if (validURL(url)) {
+    URL.newURL(url).then(url => res.send(url))
+  } else {
+    res.status(400).send({ message: 'invalid URL' })
+  }
 })
 
-app.get(/^([A-Za-z0-9]{3}$)/, (req, res) => {
-  res.redirect(`http://google.com/search?q=${req.params[0]}`)
+app.get(/^\/([A-Za-z0-9]{3}$)/, (req, res) => {
+  const shortened = req.params[0]
+  URL.findByShortURL(shortened)
+    .then(url => {
+      if (url === null) {
+        res.status(404).send({ message: 'URL not found' })
+      } else {
+        res.redirect(url.original)
+      }
+    })
 })
 
 app.listen(port)
