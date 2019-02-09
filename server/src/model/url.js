@@ -17,22 +17,8 @@ const schema = {
     type: Sequelize.STRING
   }
 }
+
 let URL = sequelize.define('url', schema)
-
-URL.sync({force: true})
-  .then(() => {
-    return URL.create({
-      shortened: '3q1',
-      original: 'http://google.com'
-    })
-  })
-  .then(() => {
-    return URL.create({
-      shortened: '6oF', 
-      original: 'http://google.ca'
-    })
-  })
-
 
 URL.findByShortURL = (shortened) => {
   return URL.findAll({
