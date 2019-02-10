@@ -17,7 +17,7 @@ module.exports = function attach(app) {
   })
 
   app.post('/urls', (req, res) => {
-    const url = req.body.shortenURL
+    const url = req.body.shortenURL || req.body['shorten_url']
     if (validURL(url)) {
       URL.newURL(url).then(url => {
         url.shortened = `http://${req.headers.host}/${url.shortened}`
