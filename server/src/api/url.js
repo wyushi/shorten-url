@@ -1,4 +1,4 @@
-const URL = require('../model/url')
+const { URL } = require('../model')
 const validURL = require('../utils/url-validator')
 
 module.exports = function attach(app) {
