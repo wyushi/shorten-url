@@ -53,19 +53,22 @@ const model = (sequelize, DataTypes) => {
       })
   }
 
+  const newShort = (original) => {
+    const short = shorten(original)
+    console.log(original, '--->', short)
+    return URL.findByShortURL(short).then(url => {
+      if (url === null) {
+        return Promise.resolve(short)
+      }
+      return newShort(short)
+    })
+  }
+  // URL.sync({force: true})
+
   return URL
 }
 
-const newShort = (original) => {
-  const short = shorten(original)
-  console.log(original, '--->', short)
-  return URL.findByShortURL(short).then(url => {
-    if (url === null) {
-      return Promise.resolve(short)
-    }
-    return newShort(short)
-  })
-}
+
 
 function purge(url) {
   return {
