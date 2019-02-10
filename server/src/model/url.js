@@ -63,7 +63,7 @@ const model = (sequelize, DataTypes) => {
       return newShort(short)
     })
   }
-  // URL.sync({force: true})
+  URL.sync({force: true})
 
   return URL
 }
