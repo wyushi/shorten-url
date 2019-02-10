@@ -18,8 +18,12 @@ describe('URL model', () => {
     checkPropertyExists(instance)(name)
   }
 
-  // test('new URL', () => {
-  //   const originalURL = 'http://foo.bar'
-  //   Model.newURL(originalURL).then(data => console.log(data))
-  // })
+  // mock db access methods
+  Model.findAll = () => Promise.resolve([])
+  Model.create = (data) => Promise.resolve(data)
+
+  test('new URL', () => {
+    const originalURL = 'http://foo.bar'
+    return Model.newURL(originalURL).then(data => expect(data).not.toBeNull())
+  })
 })
