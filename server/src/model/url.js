@@ -1,19 +1,18 @@
-const Sequelize = require('sequelize')
 const shorten = require('../utils/shorten')
 
 
-const model = (sequelize) => {
+const model = (sequelize, DataTypes) => {
   const schema = {
     id: {
-      type: Sequelize.INTEGER,
+      type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
     shortened: {
-      type: Sequelize.STRING
+      type: DataTypes.STRING
     },
     original: {
-      type: Sequelize.STRING
+      type: DataTypes.STRING
     }
   }
 
