@@ -1,4 +1,4 @@
 FROM node
-EXPOSE 8000
+EXPOSE 80 8000
 WORKDIR /code
 CMD ["yarn", "start"]
