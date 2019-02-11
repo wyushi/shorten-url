@@ -2,6 +2,8 @@
 
 ## Subject
 
+Design a shorten URL system.
+
 ```JSON
 {
     "id": 1234,
@@ -22,8 +24,6 @@ In order to shorten a URL, we need an algorithm meets following requirements
   - But it is not OK that other shortened URLs can be guessed from a given shortened URL. i.e. The next object id can be guessed by increment 1 to the previous job id.
 - The result should be equally distributed. In another word, for each possible output, they should have equal possibility to be the output
 
-Here SHA256 hash algorithm could be used to shorten the URL.
-
 ### System Capacity
 
 Base on the example above, the shortened URL would have format of `http://shorten.io/{xxx}`. For the identifier `xxx`, let's assume
@@ -34,11 +34,22 @@ Base on the example above, the shortened URL would have format of `http://shorte
 So the whole capacity of our shorten-url system would be
 `(26 + 26 + 10)^3 = 238,328`. This means our system is able to contain **at most** `238,328` URLs.
 
-### SHA256 to Base 62
+### Use of Hash Algorithms
 
-After hashed, the binary hashed result would be coverted to base 62. And then the last 3 chars are used as the shortened URL identifier.
+One popular approach is using the object id from database and then convert it into base 62. Then use the base 62 string as the shortened URL identifier.
 
-#### Alernative Way
+The downsides for this approach are
+
+- It exposes the database object id, which exposes the number of objects stored in the system as well.
+- As the db object id incremented, there is no easy way to look back. For example later, the shortened URL needs to be expired after a certain time. There is no easy way to reused the shorten URL identifier. This makes shorten URL identifier keeps growing.
+
+To solve the issue above, Hash algorithms, like MD5, SHA256, SHA1 and SHA512, are used on the original URL, and partial of the hash string is used as the shortened URL identifier.
+
+### To Base 62
+
+After hashed, the binary hashed result would be coverted to base 62. In our system, the shortened URL only has a length of 3. So the first 3 chars are token from the converted hash string.
+
+#### *Why not use the last bytes of the hash, then convert to base 62
 
 This 3-char identifier can be represented/stored as 4 or 5 bytes.
 
@@ -64,7 +75,7 @@ However, for `oMz`, there are `0oMz`, `1oMz`, `2oMz`, and `3oMv`, total 4 4-char
 
 `oMv` and `oMz` have different possibility as the output of the system.
 
-#### Example
+### Example
 
 Let's use `http://google.com` as an example.
 
@@ -80,16 +91,32 @@ Then convert this to base 62
 Elk6fWZ9dDUkkxExoeUUcjW1NQjzkYKdlhQt1y2tt1X
 ```
 
-We take the last 3 chars
+We take the first 3 chars
 
 ```none
-t1X
+Elk
 ```
 
 So the final shortened URL is
 
 ```none
-http://shorten.io/t1X
+http://shorten.io/Elk
 ```
 
-### Conflict
+### Conflicts
+
+Hash algorithm could has confilicts. As only partial of the hashed string are used, it would cause more conflicts for the shortened URL identifiers.
+
+One way to handle the conflict is hash the shortened URL identifier again, and taken partial of the result as the identifier.
+
+```js
+function getShort(url) {
+    short = calulateShort(url)
+    if (conflict(short)) {
+        return getShort(short)
+    } else {
+        return short
+    }
+}
+```
+
